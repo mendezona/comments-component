@@ -1,9 +1,9 @@
 import { z } from "zod";
+import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "~/app/app.constants";
 import {
   CommentObjectSchema,
   type CommentObject,
 } from "../Comment/Comment.types";
-import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "./CommentsFeed.constants";
 
 export async function getCommentsFromLocalStorage(
   localStorageKey: string = LOCAL_STORAGE_ALL_COMMENTS_KEY,
@@ -14,7 +14,9 @@ export async function getCommentsFromLocalStorage(
   }
   try {
     const CommentSchemaArray = z.array(CommentObjectSchema);
-    const comments = CommentSchemaArray.parse(JSON.parse(commentsString));
+    const comments = CommentSchemaArray.parse(
+      JSON.parse(commentsString),
+    ).reverse();
     return comments;
   } catch (error) {
     console.error("Error parsing localStorage data:", error);

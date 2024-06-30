@@ -1,6 +1,6 @@
 import { type QueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "../CommentsFeed/CommentsFeed.constants";
+import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "~/app/app.constants";
 import { type CommentForm, type CommentObject } from "./Comment.types";
 
 export default async function addNewComment(
