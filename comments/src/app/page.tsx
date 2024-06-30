@@ -1,23 +1,16 @@
-import Comment from "./_components/Comment/Comment";
-import { type CommentObject } from "./_components/Comment/Comment.types";
-import CommentsFeed from "./_components/CommentsFeed";
+"use client";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CommentsFeed from "./_components/CommentsFeed/CommentsFeed";
+
+const queryClient = new QueryClient();
 
 export default function HomePage() {
-  const comment = {
-    author: "John Doe",
-    commentText: "This is a comment",
-    createdAt: "2023-01-01",
-  } as CommentObject;
-
   return (
     <main className="bg-background flex min-h-screen flex-col items-start justify-start">
-      <CommentsFeed>
-        <Comment
-          author={comment.author}
-          commentText={comment.commentText}
-          createdAt={comment.createdAt}
-        />
-      </CommentsFeed>
+      <QueryClientProvider client={queryClient}>
+        <CommentsFeed />
+      </QueryClientProvider>
     </main>
   );
 }
