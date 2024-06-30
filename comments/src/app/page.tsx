@@ -7,7 +7,7 @@ const queryClient = new QueryClient();
 
 export default function HomePage() {
   return (
-    <main className="bg-background flex min-h-screen flex-col items-start justify-start">
+    <main className="bg-background flex min-h-screen flex-col items-start justify-start ">
       <QueryClientProvider client={queryClient}>
         <CommentsFeed />
       </QueryClientProvider>

@@ -21,7 +21,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        "bg-background min-h-screen font-sans antialiased",
+        "bg-background scrollbar min-h-screen overflow-y-scroll font-sans antialiased",
         fontSans.variable,
       )}
     >
