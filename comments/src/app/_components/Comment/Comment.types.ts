@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const CommentObjectSchema = z.object({
+  commentId: z.string(),
   author: z.string(),
   commentText: z.string(),
   createdAt: z.string(),

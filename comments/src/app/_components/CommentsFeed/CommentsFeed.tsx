@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { v7 as uuidv7 } from "uuid";
 import { Skeleton } from "~/components/ui/skeleton";
 import Comment from "../Comment/Comment";
 import { type CommentObject } from "../Comment/Comment.types";
@@ -15,7 +14,7 @@ export default function CommentsFeed(): JSX.Element {
   });
 
   return (
-    <div className="mx-auto flex min-w-[761px] max-w-[761px] flex-col items-start py-10">
+    <div className="mx-auto flex w-[761px] max-w-[761px] flex-col items-start px-5 py-10">
       <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
         Comments Demo App
       </h2>
@@ -44,14 +43,17 @@ export default function CommentsFeed(): JSX.Element {
             There is an error retrieving the comments data
           </h4>
         ) : (
-          data.map((comment: CommentObject) => (
-            <Comment
-              key={uuidv7()}
-              author={comment.author}
-              commentText={comment.commentText}
-              createdAt={comment.createdAt}
-            />
-          ))
+          data.map((comment: CommentObject) => {
+            return (
+              <Comment
+                key={comment.commentId}
+                commentId={comment.commentId}
+                author={comment.author}
+                commentText={comment.commentText}
+                createdAt={comment.createdAt}
+              />
+            );
+          })
         )}
       </div>
     </div>

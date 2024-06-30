@@ -13,7 +13,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import addNewComment from "../Comment/Comment.helpers";
+import { addNewComment } from "../Comment/Comment.helpers";
 import { CommentFormSchema } from "../Comment/Comment.types";
 import { type CommentFormProps } from "./CommentForm.types";
 
