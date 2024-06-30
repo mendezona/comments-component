@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "~/app/app.constants";
 import { Button } from "~/components/ui/button";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -55,7 +56,7 @@ export default function CommentForm({
   };
 
   return (
-    <FormProvider {...form}>
+    <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="min-w-full">
         <FormField
           control={form.control}
@@ -103,6 +104,6 @@ export default function CommentForm({
           </Button>
         </div>
       </form>
-    </FormProvider>
+    </Form>
   );
 }
