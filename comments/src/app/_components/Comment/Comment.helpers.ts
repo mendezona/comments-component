@@ -9,14 +9,7 @@ export function updateCommentsInLocalStorage(
   newCommentsState: CommentObjectInterface[],
 ) {
   const newCommentsStateToString: string = JSON.stringify(newCommentsState);
-  console.log("Storing comments:", newCommentsStateToString);
   localStorage.setItem(
-    LOCAL_STORAGE_ALL_COMMENTS_KEY,
-    newCommentsStateToString,
-  );
-  console.log("Comments successfully stored in localStorage.");
-  console.log("attempt in sessionStorage too");
-  sessionStorage.setItem(
     LOCAL_STORAGE_ALL_COMMENTS_KEY,
     newCommentsStateToString,
   );

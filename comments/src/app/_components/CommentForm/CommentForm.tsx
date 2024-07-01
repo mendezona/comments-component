@@ -38,6 +38,8 @@ export default function CommentForm({
         parentCommentId
           ? replyToExistingComment(newComment, currentCommentsStateShallowCopy)
           : addNewComment(newComment, currentCommentsStateShallowCopy);
+      } else {
+        addNewComment(newComment);
       }
     },
     onSuccess: async () => {

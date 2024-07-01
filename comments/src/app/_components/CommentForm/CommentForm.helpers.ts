@@ -6,7 +6,7 @@ import { type CommentForm } from "./CommentForm.types";
 
 export function addNewComment(
   newComment: CommentForm,
-  currentCommentsState: CommentObjectInterface[],
+  currentCommentsState?: CommentObjectInterface[],
 ) {
   const newCommentWithTimestamp: CommentObjectInterface = {
     ...newComment,
