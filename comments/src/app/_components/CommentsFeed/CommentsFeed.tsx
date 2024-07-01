@@ -22,7 +22,7 @@ export default function CommentsFeed(): JSX.Element {
         <h4 className="mb-3 scroll-m-20 text-xl font-semibold tracking-tight">
           Post a new comment here
         </h4>
-        <div className="mb-5 w-full border-b-2 pb-5">
+        <div className="w-full border-b-2 pb-5">
           <CommentForm />
         </div>
         <div className="w-full">

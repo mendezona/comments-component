@@ -32,6 +32,7 @@ export default function Comment({
   commentText,
   createdAt,
   nestedComments,
+  nestedComment = false,
 }: CommentObject): JSX.Element {
   const queryClient = useQueryClient();
   const [showEditorTextarea, setShowEditorTextarea] = useState<boolean>(false);
@@ -55,13 +56,13 @@ export default function Comment({
     <Accordion
       type="multiple"
       defaultValue={["comment"]}
-      className="mb-2 w-full"
+      className="mt-5 w-full"
     >
-      <Card className="px-2">
+      <Card className="pl-2" nestedComment={nestedComment}>
         <AccordionItem value="comment" className="w-full">
           <div className="flex-start flex w-full ">
             <AccordionTrigger className="w-3 pt-0" />
-            <div className="border-primary-100 bg-primary-50 border-3 min-w-full rounded-lg p-4">
+            <div className="border-primary-100 bg-primary-50 border-3 w-full rounded-lg p-4">
               <div className="mb-3 flex items-center justify-between">
                 <h3 className="font-medium">{author}</h3>
                 <time className="text-muted-foreground text-sm">
@@ -73,7 +74,7 @@ export default function Comment({
           <AccordionContent className="w-full">
             <div className="w-full pl-7">
               <p className="text-muted-foreground">{commentText}</p>
-              <div className="container mt-4 flex items-end justify-end gap-2">
+              <div className="container mt-4 flex items-end justify-end gap-2 pr-4">
                 <div>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -132,6 +133,7 @@ export default function Comment({
                     commentText={comment.commentText}
                     createdAt={comment.createdAt}
                     nestedComments={comment.nestedComments}
+                    nestedComment
                   />
                 ))}
             </div>

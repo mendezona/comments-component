@@ -6,6 +6,7 @@ export interface CommentObjectInterface {
   commentText: string;
   createdAt: string;
   nestedComments?: CommentObject[];
+  nestedComment?: boolean;
 }
 
 export const CommentObjectSchema: z.ZodType<CommentObjectInterface> = z.lazy(
@@ -16,6 +17,7 @@ export const CommentObjectSchema: z.ZodType<CommentObjectInterface> = z.lazy(
       commentText: z.string(),
       createdAt: z.string(),
       nestedComments: z.array(CommentObjectSchema).optional(),
+      nestedComment: z.boolean().optional(),
     }),
 );
 
