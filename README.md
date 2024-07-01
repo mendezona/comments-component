@@ -12,7 +12,8 @@ Welcome to the comments component demo app! :)
     - Responsive design
     - Comments are expandable and collapsible
     - Names are automatically capitalised
-    - Form data is validated with zod
+    - Form data is validated with Zod
+    - App is performant and accessible as per Google Lighthouse Report
 
 ## To run the app locally
 
