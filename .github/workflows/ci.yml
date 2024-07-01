@@ -20,20 +20,20 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install
-        working-directory: ./orders
+        working-directory: ./comments
 
       - name: Typecheck
         run: pnpm run typecheck
-        working-directory: ./orders
+        working-directory: ./comments
 
       - name: Lint
         run: pnpm run lint
-        working-directory: ./orders
+        working-directory: ./comments
 
       - name: Print Environment Variable
         run: echo $MY_ENV_VAR
-        working-directory: ./orders
+        working-directory: ./comments
 
       - name: Unit Tests
         run: pnpm run test
-        working-directory: ./orders
+        working-directory: ./comments
