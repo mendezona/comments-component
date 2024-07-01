@@ -1,21 +1,20 @@
-import { type QueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { v7 as uuidv7 } from "uuid";
 import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "~/app/app.constants";
-import {
-  type CommentForm,
-  type CommentObject,
-  type CommentObjectInterface,
-} from "./Comment.types";
+import { type CommentForm, type CommentObjectInterface } from "./Comment.types";
 
 export async function updateCommentsInLocalStorage(
   newCommentsState: CommentObjectInterface[],
 ) {
-  const newCommentsStateToString = JSON.stringify(newCommentsState);
-  localStorage.setItem(
-    LOCAL_STORAGE_ALL_COMMENTS_KEY,
-    newCommentsStateToString,
-  );
+  try {
+    const newCommentsStateToString = JSON.stringify(newCommentsState);
+    localStorage.setItem(
+      LOCAL_STORAGE_ALL_COMMENTS_KEY,
+      newCommentsStateToString,
+    );
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 export async function addNewComment(
@@ -58,7 +57,6 @@ export async function replyToExistingComment(
         commentId: uuidv7().toString(),
         createdAt: dayjs().toString(),
       });
-
       await updateCommentsInLocalStorage(currentCommentsState);
       return true;
     }
@@ -76,30 +74,66 @@ export async function replyToExistingComment(
   return false;
 }
 
+// export async function deleteComment(
+//   commentId: string,
+//   currentCommentsState: CommentObjectInterface[],
+// ): Promise<boolean> {
+//   if (currentCommentsState) {
+//     for (let i = 0; i < currentCommentsState.length; i++) {
+//       if (currentCommentsState[i]!.commentId === commentId) {
+//         currentCommentsState.splice(i, 1);
+//         await updateCommentsInLocalStorage(currentCommentsState);
+//         return true;
+//       }
+//       if (currentCommentsState[i]!.nestedComments) {
+//         const result = await deleteComment(
+//           commentId,
+//           currentCommentsState[i]!.nestedComments!,
+//         );
+//         if (result) {
+//           await updateCommentsInLocalStorage(currentCommentsState);
+//           return true;
+//         }
+//       }
+//     }
+//   }
+//   return false;
+// }
+
 export async function deleteComment(
   commentId: string,
-  queryClient: QueryClient,
-) {
-  try {
-    const currentComments: CommentObject[] | undefined =
-      queryClient.getQueryData<CommentObject[]>([
-        LOCAL_STORAGE_ALL_COMMENTS_KEY,
-      ]);
-
-    if (currentComments) {
-      const removeCommentFromCurrentComments: CommentObject[] =
-        currentComments.filter((comment) => comment.commentId !== commentId);
-      const removeCommentFromCurrentCommentsString: string = JSON.stringify(
-        removeCommentFromCurrentComments,
-      );
-      localStorage.setItem(
-        LOCAL_STORAGE_ALL_COMMENTS_KEY,
-        removeCommentFromCurrentCommentsString,
-      );
-    } else {
-      console.log("Comment to deletenot found");
-    }
-  } catch (error) {
-    console.error("Error:", error);
+  currentCommentsState: CommentObjectInterface[],
+): Promise<boolean> {
+  const isDeleted = recursiveDeleteComment(commentId, currentCommentsState);
+  if (isDeleted) {
+    await updateCommentsInLocalStorage(currentCommentsState);
+    return true;
+  } else {
+    console.log("Comment to delete not found");
+    return false;
   }
+}
+
+function recursiveDeleteComment(
+  commentId: string,
+  currentCommentsState: CommentObjectInterface[],
+): boolean {
+  if (currentCommentsState) {
+    for (let i = 0; i < currentCommentsState.length; i++) {
+      if (currentCommentsState[i]!.commentId === commentId) {
+        currentCommentsState.splice(i, 1);
+        return true;
+      }
+      if (currentCommentsState[i]!.nestedComments) {
+        const result = recursiveDeleteComment(
+          commentId,
+          currentCommentsState[i]!.nestedComments!,
+        );
+        if (result) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
 }

@@ -22,7 +22,10 @@ import {
 } from "~/components/ui/tooltip";
 import CommentForm from "../CommentForm/CommentForm";
 import { deleteComment } from "./Comment.helpers";
-import { type CommentObject } from "./Comment.types";
+import {
+  type CommentObject,
+  type CommentObjectInterface,
+} from "./Comment.types";
 
 dayjs.extend(relativeTime);
 
@@ -40,15 +43,23 @@ export default function Comment({
   const { mutate } = useMutation({
     mutationFn: async () => {
       const currentCommentsState =
-        queryClient.getQueryData<CommentObject[]>([
+        queryClient.getQueryData<CommentObjectInterface[]>([
           LOCAL_STORAGE_ALL_COMMENTS_KEY,
         ]) ?? [];
-      const currentCommentsStateShallowCopy = [...currentCommentsState];
-      await deleteComment(commentId, currentCommentsStateShallowCopy);
+      const currentCommentsStateDeepCopy = JSON.parse(
+        JSON.stringify(currentCommentsState),
+      ) as CommentObjectInterface[];
+      await deleteComment(commentId, currentCommentsStateDeepCopy);
+      queryClient.setQueryData<CommentObjectInterface[]>(
+        [LOCAL_STORAGE_ALL_COMMENTS_KEY],
+        currentCommentsStateDeepCopy,
+      );
+      setShowEditorTextarea(false);
+    },
+    onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [LOCAL_STORAGE_ALL_COMMENTS_KEY],
       });
-      setShowEditorTextarea(false);
     },
   });
 

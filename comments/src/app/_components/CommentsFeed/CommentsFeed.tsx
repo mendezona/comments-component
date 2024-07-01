@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "~/app/app.constants";
 import { Skeleton } from "~/components/ui/skeleton";
 import Comment from "../Comment/Comment";
 import { type CommentObject } from "../Comment/Comment.types";
@@ -9,8 +10,9 @@ import { getCommentsFromLocalStorage } from "./CommentsFeed.helpers";
 
 export default function CommentsFeed(): JSX.Element {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["allComments"],
+    queryKey: [LOCAL_STORAGE_ALL_COMMENTS_KEY],
     queryFn: async () => getCommentsFromLocalStorage(),
+    staleTime: 0,
   });
 
   return (

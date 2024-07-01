@@ -46,6 +46,8 @@ export default function CommentForm({
             currentCommentsStateShallowCopy,
           )
         : await addNewComment(newComment, currentCommentsStateShallowCopy);
+    },
+    onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [LOCAL_STORAGE_ALL_COMMENTS_KEY],
       });
