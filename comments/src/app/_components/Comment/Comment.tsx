@@ -18,7 +18,6 @@ import ReplyIcon from "~/components/ui/icons/replyIcon";
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import CommentForm from "../CommentForm/CommentForm";
@@ -71,24 +70,26 @@ export default function Comment({
           <AccordionContent className="w-full pl-7">
             <p className="text-muted-foreground">{commentText}</p>
             <div className="container mt-4 flex items-end justify-end gap-2">
-              <TooltipProvider>
+              <div>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => mutate()}
                     >
                       <TrashIcon className="h-4 w-4" />
-                      <span className="sr-only">Reply</span>
+                      <span className="sr-only">Delete</span>
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Delete comment</p>
                   </TooltipContent>
                 </Tooltip>
+              </div>
+              <div>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -102,13 +103,15 @@ export default function Comment({
                     <p>Reply to comment</p>
                   </TooltipContent>
                 </Tooltip>
-              </TooltipProvider>
-            </div>
-            {showEditorTextarea && (
-              <div className="mt-2 flex-col items-end justify-end px-3">
-                <CommentForm onCancelFunction={() => onCancel()} />
               </div>
-            )}
+            </div>
+            <div className="mt-5">
+              {showEditorTextarea && (
+                <div className="mt-2 flex-col items-end justify-end px-3">
+                  <CommentForm onCancelFunction={() => onCancel()} />
+                </div>
+              )}
+            </div>
           </AccordionContent>
         </AccordionItem>
       </Card>
