@@ -15,6 +15,7 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
+import { toast } from "~/components/ui/use-toast";
 import {
   addNewComment,
   replyToExistingComment,
@@ -50,6 +51,9 @@ export default function CommentForm({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [LOCAL_STORAGE_ALL_COMMENTS_KEY],
+      });
+      toast({
+        title: "Comment added successfully",
       });
     },
   });

@@ -20,6 +20,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { toast } from "~/components/ui/use-toast";
 import CommentForm from "../CommentForm/CommentForm";
 import { deleteComment } from "./Comment.helpers";
 import {
@@ -59,6 +60,9 @@ export default function Comment({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: [LOCAL_STORAGE_ALL_COMMENTS_KEY],
+      });
+      toast({
+        title: "Comment deleted successfully",
       });
     },
   });

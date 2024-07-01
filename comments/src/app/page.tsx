@@ -1,6 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "~/components/ui/toaster";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import CommentsFeed from "./_components/CommentsFeed/CommentsFeed";
 
@@ -14,6 +15,7 @@ export default function HomePage() {
           <CommentsFeed />
         </TooltipProvider>
       </QueryClientProvider>
+      <Toaster />
     </main>
   );
 }

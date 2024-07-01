@@ -74,32 +74,6 @@ export async function replyToExistingComment(
   return false;
 }
 
-// export async function deleteComment(
-//   commentId: string,
-//   currentCommentsState: CommentObjectInterface[],
-// ): Promise<boolean> {
-//   if (currentCommentsState) {
-//     for (let i = 0; i < currentCommentsState.length; i++) {
-//       if (currentCommentsState[i]!.commentId === commentId) {
-//         currentCommentsState.splice(i, 1);
-//         await updateCommentsInLocalStorage(currentCommentsState);
-//         return true;
-//       }
-//       if (currentCommentsState[i]!.nestedComments) {
-//         const result = await deleteComment(
-//           commentId,
-//           currentCommentsState[i]!.nestedComments!,
-//         );
-//         if (result) {
-//           await updateCommentsInLocalStorage(currentCommentsState);
-//           return true;
-//         }
-//       }
-//     }
-//   }
-//   return false;
-// }
-
 export async function deleteComment(
   commentId: string,
   currentCommentsState: CommentObjectInterface[],
