@@ -6,6 +6,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import Comment from "../Comment/Comment";
 import { type CommentObject } from "../Comment/Comment.types";
 import CommentForm from "../CommentForm/CommentForm";
+import { DarkModeToggleButton } from "../DarkModeToggleButton";
 import { getCommentsFromLocalStorage } from "./CommentsFeed.helpers";
 
 export default function CommentsFeed(): JSX.Element {
@@ -18,9 +19,12 @@ export default function CommentsFeed(): JSX.Element {
   return (
     <div className="mx-auto flex w-full">
       <div className="mx-auto w-full flex-col px-3 py-5 md:w-3/5 md:p-10 md:px-5 md:py-10">
-        <h2 className="mb-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-          Comments Demo App
-        </h2>
+        <div className="mb-10 flex justify-between border-b pb-2">
+          <h2 className=" scroll-m-20  text-3xl font-semibold tracking-tight first:mt-0">
+            Comments Demo App
+          </h2>
+          <DarkModeToggleButton />
+        </div>
         <h4 className="mb-3 scroll-m-20 text-xl font-semibold tracking-tight">
           Post a new comment here
         </h4>

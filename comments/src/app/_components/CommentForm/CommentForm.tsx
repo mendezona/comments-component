@@ -105,7 +105,7 @@ export default function CommentForm({
               <FormControl>
                 <Textarea
                   placeholder="Write your comment here"
-                  className="min-w-full"
+                  className="mt-2 min-w-full"
                   {...field}
                 />
               </FormControl>

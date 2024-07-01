@@ -1,4 +1,5 @@
 import { Inter as FontSans } from "next/font/google";
+import { ThemeProvider } from "~/components/theme-provider";
 import { cn } from "~/lib/utils";
 import "~/styles/globals.css";
 
@@ -21,11 +22,20 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(
-        "bg-background scrollbar min-h-screen overflow-y-scroll font-sans antialiased",
+        "bg-background text-foreground antialiased",
         fontSans.variable,
       )}
+      suppressHydrationWarning
     >
-      <body>{children}</body>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
