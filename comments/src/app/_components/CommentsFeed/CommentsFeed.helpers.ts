@@ -14,9 +14,7 @@ export async function getCommentsFromLocalStorage(
   }
   try {
     const CommentSchemaArray = z.array(CommentObjectSchema);
-    const comments = CommentSchemaArray.parse(
-      JSON.parse(commentsString),
-    ).reverse();
+    const comments = CommentSchemaArray.parse(JSON.parse(commentsString));
     return comments;
   } catch (error) {
     console.error("Error parsing localStorage data:", error);

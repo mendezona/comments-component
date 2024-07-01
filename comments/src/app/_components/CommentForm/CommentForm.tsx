@@ -15,18 +15,37 @@ import {
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
-import { addNewComment } from "../Comment/Comment.helpers";
-import { CommentFormSchema } from "../Comment/Comment.types";
+import {
+  addNewComment,
+  replyToExistingComment,
+} from "../Comment/Comment.helpers";
+import {
+  CommentFormSchema,
+  type CommentObject,
+} from "../Comment/Comment.types";
 import { type CommentFormProps } from "./CommentForm.types";
 
 export default function CommentForm({
+  parentCommentId,
   onCancelFunction,
+  onSuccessFunction,
 }: CommentFormProps): JSX.Element {
   const queryClient = useQueryClient();
 
   const updateAllCommentsData = useMutation({
-    mutationFn: async (data: z.infer<typeof CommentFormSchema>) => {
-      await addNewComment(data, queryClient);
+    mutationFn: async (newComment: z.infer<typeof CommentFormSchema>) => {
+      // TODO: wrap and name this as a function?
+      const currentCommentsState =
+        queryClient.getQueryData<CommentObject[]>([
+          LOCAL_STORAGE_ALL_COMMENTS_KEY,
+        ]) ?? [];
+      const currentCommentsStateShallowCopy = [...currentCommentsState];
+      parentCommentId
+        ? await replyToExistingComment(
+            newComment,
+            currentCommentsStateShallowCopy,
+          )
+        : await addNewComment(newComment, currentCommentsStateShallowCopy);
       await queryClient.invalidateQueries({
         queryKey: [LOCAL_STORAGE_ALL_COMMENTS_KEY],
       });
@@ -36,6 +55,7 @@ export default function CommentForm({
   const form = useForm<z.infer<typeof CommentFormSchema>>({
     resolver: zodResolver(CommentFormSchema),
     defaultValues: {
+      parentCommentId: parentCommentId,
       author: "",
       commentText: "",
     },
@@ -44,6 +64,7 @@ export default function CommentForm({
   const onSubmit = (data: z.infer<typeof CommentFormSchema>) => {
     updateAllCommentsData.mutate(data, {
       onSuccess: () => {
+        onSuccessFunction?.();
         form.reset();
       },
       onError: (error) => {

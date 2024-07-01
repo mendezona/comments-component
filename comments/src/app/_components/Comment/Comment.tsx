@@ -31,22 +31,25 @@ export default function Comment({
   author,
   commentText,
   createdAt,
+  nestedComments,
 }: CommentObject): JSX.Element {
   const queryClient = useQueryClient();
   const [showEditorTextarea, setShowEditorTextarea] = useState<boolean>(false);
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      await deleteComment(commentId, queryClient);
+      const currentCommentsState =
+        queryClient.getQueryData<CommentObject[]>([
+          LOCAL_STORAGE_ALL_COMMENTS_KEY,
+        ]) ?? [];
+      const currentCommentsStateShallowCopy = [...currentCommentsState];
+      await deleteComment(commentId, currentCommentsStateShallowCopy);
       await queryClient.invalidateQueries({
         queryKey: [LOCAL_STORAGE_ALL_COMMENTS_KEY],
       });
+      setShowEditorTextarea(false);
     },
   });
-
-  const onCancel = () => {
-    setShowEditorTextarea(!showEditorTextarea);
-  };
 
   return (
     <Accordion
@@ -67,50 +70,70 @@ export default function Comment({
               </div>
             </div>
           </div>
-          <AccordionContent className="w-full pl-7">
-            <p className="text-muted-foreground">{commentText}</p>
-            <div className="container mt-4 flex items-end justify-end gap-2">
-              <div>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => mutate()}
-                    >
-                      <TrashIcon className="h-4 w-4" />
-                      <span className="sr-only">Delete</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Delete comment</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <div>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onCancel()}
-                    >
-                      <ReplyIcon className="h-4 w-4" />
-                      <span className="sr-only">Reply</span>
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Reply to comment</p>
-                  </TooltipContent>
-                </Tooltip>
+          <AccordionContent className="w-full">
+            <div className="w-full pl-7">
+              <p className="text-muted-foreground">{commentText}</p>
+              <div className="container mt-4 flex items-end justify-end gap-2">
+                <div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => mutate()}
+                      >
+                        <TrashIcon className="h-4 w-4" />
+                        <span className="sr-only">Delete</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Delete comment</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <div>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          setShowEditorTextarea(!showEditorTextarea)
+                        }
+                      >
+                        <ReplyIcon className="h-4 w-4" />
+                        <span className="sr-only">Reply</span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Reply to comment</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
             </div>
+            {showEditorTextarea && (
+              <div className="mt-2 flex-col items-end justify-end px-3">
+                <CommentForm
+                  parentCommentId={commentId}
+                  onCancelFunction={() => setShowEditorTextarea(false)}
+                  onSuccessFunction={() => setShowEditorTextarea(false)}
+                />
+              </div>
+            )}
             <div className="mt-5">
-              {showEditorTextarea && (
-                <div className="mt-2 flex-col items-end justify-end px-3">
-                  <CommentForm onCancelFunction={() => onCancel()} />
-                </div>
-              )}
+              {nestedComments &&
+                nestedComments.length > 0 &&
+                nestedComments.map((comment: CommentObject) => (
+                  <Comment
+                    key={comment.commentId}
+                    commentId={comment.commentId}
+                    author={comment.author}
+                    commentText={comment.commentText}
+                    createdAt={comment.createdAt}
+                    nestedComments={comment.nestedComments}
+                  />
+                ))}
             </div>
           </AccordionContent>
         </AccordionItem>
