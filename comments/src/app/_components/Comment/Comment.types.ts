@@ -22,11 +22,3 @@ export const CommentObjectSchema: z.ZodType<CommentObjectInterface> = z.lazy(
 );
 
 export type CommentObject = z.infer<typeof CommentObjectSchema>;
-
-export const CommentFormSchema = z.object({
-  parentCommentId: z.string().optional(),
-  author: z.string().min(1, { message: "Author is required" }),
-  commentText: z.string().min(1, { message: "Comment text is required" }),
-});
-
-export type CommentForm = z.infer<typeof CommentFormSchema>;

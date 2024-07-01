@@ -16,15 +16,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { toast } from "~/components/ui/use-toast";
-import {
-  addNewComment,
-  replyToExistingComment,
-} from "../Comment/Comment.helpers";
-import {
-  CommentFormSchema,
-  type CommentObject,
-} from "../Comment/Comment.types";
-import { type CommentFormProps } from "./CommentForm.types";
+import { replyToExistingComment } from "../Comment/Comment.helpers";
+import { type CommentObject } from "../Comment/Comment.types";
+import { addNewComment } from "./CommentForm.helpers";
+import { CommentFormSchema, type CommentFormProps } from "./CommentForm.types";
 
 export default function CommentForm({
   parentCommentId,
@@ -35,18 +30,15 @@ export default function CommentForm({
 
   const updateAllCommentsData = useMutation({
     mutationFn: async (newComment: z.infer<typeof CommentFormSchema>) => {
-      // TODO: wrap and name this as a function?
-      const currentCommentsState =
-        queryClient.getQueryData<CommentObject[]>([
-          LOCAL_STORAGE_ALL_COMMENTS_KEY,
-        ]) ?? [];
-      const currentCommentsStateShallowCopy = [...currentCommentsState];
-      parentCommentId
-        ? await replyToExistingComment(
-            newComment,
-            currentCommentsStateShallowCopy,
-          )
-        : await addNewComment(newComment, currentCommentsStateShallowCopy);
+      const currentCommentsState = queryClient.getQueryData<CommentObject[]>([
+        LOCAL_STORAGE_ALL_COMMENTS_KEY,
+      ]);
+      if (currentCommentsState) {
+        const currentCommentsStateShallowCopy = [...currentCommentsState];
+        parentCommentId
+          ? replyToExistingComment(newComment, currentCommentsStateShallowCopy)
+          : addNewComment(newComment, currentCommentsStateShallowCopy);
+      }
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({

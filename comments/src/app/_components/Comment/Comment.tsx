@@ -43,18 +43,17 @@ export default function Comment({
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      const currentCommentsState =
+      const currentCommentsState: CommentObjectInterface[] | undefined =
         queryClient.getQueryData<CommentObjectInterface[]>([
           LOCAL_STORAGE_ALL_COMMENTS_KEY,
-        ]) ?? [];
-      const currentCommentsStateDeepCopy = JSON.parse(
-        JSON.stringify(currentCommentsState),
-      ) as CommentObjectInterface[];
-      await deleteComment(commentId, currentCommentsStateDeepCopy);
-      queryClient.setQueryData<CommentObjectInterface[]>(
-        [LOCAL_STORAGE_ALL_COMMENTS_KEY],
-        currentCommentsStateDeepCopy,
-      );
+        ]);
+      if (currentCommentsState) {
+        const currentCommentsStateDeepCopy: CommentObjectInterface[] =
+          JSON.parse(
+            JSON.stringify(currentCommentsState),
+          ) as CommentObjectInterface[];
+        deleteComment(commentId, currentCommentsStateDeepCopy);
+      }
       setShowEditorTextarea(false);
     },
     onSuccess: async () => {

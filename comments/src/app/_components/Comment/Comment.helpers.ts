@@ -1,52 +1,23 @@
 import dayjs from "dayjs";
 import { v7 as uuidv7 } from "uuid";
 import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "~/app/app.constants";
-import { type CommentForm, type CommentObjectInterface } from "./Comment.types";
+import { type CommentForm } from "../CommentForm/CommentForm.types";
+import { type CommentObjectInterface } from "./Comment.types";
 
-export async function updateCommentsInLocalStorage(
+export function updateCommentsInLocalStorage(
   newCommentsState: CommentObjectInterface[],
 ) {
-  try {
-    const newCommentsStateToString = JSON.stringify(newCommentsState);
-    localStorage.setItem(
-      LOCAL_STORAGE_ALL_COMMENTS_KEY,
-      newCommentsStateToString,
-    );
-  } catch (error) {
-    console.error("Error:", error);
-  }
+  const newCommentsStateToString: string = JSON.stringify(newCommentsState);
+  localStorage.setItem(
+    LOCAL_STORAGE_ALL_COMMENTS_KEY,
+    newCommentsStateToString,
+  );
 }
 
-export async function addNewComment(
+export function replyToExistingComment(
   newComment: CommentForm,
   currentCommentsState: CommentObjectInterface[],
-) {
-  try {
-    const newCommentWithTimestamp = {
-      ...newComment,
-      commentId: uuidv7().toString(),
-      createdAt: dayjs().toString(),
-    };
-
-    if (currentCommentsState) {
-      const appendedComments: CommentObjectInterface[] = [
-        newCommentWithTimestamp,
-        ...currentCommentsState,
-      ];
-      await updateCommentsInLocalStorage(appendedComments);
-    } else {
-      const newComments: CommentObjectInterface[] = [newCommentWithTimestamp];
-      await updateCommentsInLocalStorage(newComments);
-    }
-  } catch (error) {
-    console.error("Error:", error);
-  }
-}
-
-export async function replyToExistingComment(
-  newComment: CommentForm,
-  currentCommentsState: CommentObjectInterface[],
-): Promise<boolean> {
+): boolean {
   for (const comment of currentCommentsState) {
     if (comment.commentId === newComment.parentCommentId) {
       if (!comment.nestedComments) {
@@ -57,16 +28,16 @@ export async function replyToExistingComment(
         commentId: uuidv7().toString(),
         createdAt: dayjs().toString(),
       });
-      await updateCommentsInLocalStorage(currentCommentsState);
+      updateCommentsInLocalStorage(currentCommentsState);
       return true;
     }
     if (comment.nestedComments) {
-      const result = await replyToExistingComment(
+      const result: boolean = replyToExistingComment(
         newComment,
         comment.nestedComments,
       );
       if (result) {
-        await updateCommentsInLocalStorage(currentCommentsState);
+        updateCommentsInLocalStorage(currentCommentsState);
         return true;
       }
     }
@@ -74,13 +45,16 @@ export async function replyToExistingComment(
   return false;
 }
 
-export async function deleteComment(
+export function deleteComment(
   commentId: string,
   currentCommentsState: CommentObjectInterface[],
-): Promise<boolean> {
-  const isDeleted = recursiveDeleteComment(commentId, currentCommentsState);
+): boolean {
+  const isDeleted: boolean = recursiveDeleteComment(
+    commentId,
+    currentCommentsState,
+  );
   if (isDeleted) {
-    await updateCommentsInLocalStorage(currentCommentsState);
+    updateCommentsInLocalStorage(currentCommentsState);
     return true;
   } else {
     console.log("Comment to delete not found");
@@ -88,7 +62,7 @@ export async function deleteComment(
   }
 }
 
-function recursiveDeleteComment(
+export function recursiveDeleteComment(
   commentId: string,
   currentCommentsState: CommentObjectInterface[],
 ): boolean {
@@ -99,7 +73,7 @@ function recursiveDeleteComment(
         return true;
       }
       if (currentCommentsState[i]!.nestedComments) {
-        const result = recursiveDeleteComment(
+        const result: boolean = recursiveDeleteComment(
           commentId,
           currentCommentsState[i]!.nestedComments!,
         );

@@ -12,7 +12,6 @@ export default function CommentsFeed(): JSX.Element {
   const { data, isLoading, isError } = useQuery({
     queryKey: [LOCAL_STORAGE_ALL_COMMENTS_KEY],
     queryFn: async () => getCommentsFromLocalStorage(),
-    staleTime: 0,
   });
 
   return (
