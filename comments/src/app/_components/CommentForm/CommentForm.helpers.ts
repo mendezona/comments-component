@@ -10,6 +10,7 @@ export function addNewComment(
 ) {
   const newCommentWithTimestamp: CommentObjectInterface = {
     ...newComment,
+    author: capitaliseAllWords(newComment.author),
     commentId: uuidv7().toString(),
     createdAt: dayjs().toString(),
   };
@@ -24,4 +25,11 @@ export function addNewComment(
     const newComments: CommentObjectInterface[] = [newCommentWithTimestamp];
     updateCommentsInLocalStorage(newComments);
   }
+}
+
+export function capitaliseAllWords(str: string): string {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 }

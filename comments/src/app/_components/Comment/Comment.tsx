@@ -87,7 +87,7 @@ export default function Comment({
           </div>
           <AccordionContent className="w-full">
             <div className="w-full pl-7">
-              <p className="text-muted-foreground">{commentText}</p>
+              <p className="text-muted-foreground pr-4">{commentText}</p>
               <div className="container mt-4 flex items-end justify-end gap-2 pr-4">
                 <div>
                   <Tooltip>

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { v7 as uuidv7 } from "uuid";
 import { LOCAL_STORAGE_ALL_COMMENTS_KEY } from "~/app/app.constants";
+import { capitaliseAllWords } from "../CommentForm/CommentForm.helpers";
 import { type CommentForm } from "../CommentForm/CommentForm.types";
 import { type CommentObjectInterface } from "./Comment.types";
 
@@ -25,6 +26,7 @@ export function replyToExistingComment(
       }
       comment.nestedComments.unshift({
         ...newComment,
+        author: capitaliseAllWords(newComment.author),
         commentId: uuidv7().toString(),
         createdAt: dayjs().toString(),
       });
